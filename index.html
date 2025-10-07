@@ -8,7 +8,768 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Montserrat:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #1a1a28;
+            --bg-tertiary: #252535;
+            --electric-blue: #00d9ff;
+            --neon-purple: #b537ff;
+            --hot-pink: #ff0080;
+            --cyber-cyan: #00fff9;
+            --toxic-green: #39ff14;
+            --gold: #ffd700;
+            --text-primary: #ffffff;
+            --text-secondary: #b8b8d0;
+            --text-tertiary: #707088;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #12121a 50%, var(--bg-primary) 100%);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Particle Background */
+        .particle-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, var(--electric-blue) 0%, transparent 70%);
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0px);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100px) translateX(50px);
+                opacity: 0;
+            }
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 217, 255, 0.1);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 80px;
+            position: relative;
+        }
+
+        .nav__logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 28px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--electric-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+            cursor: pointer;
+        }
+
+        .nav__menu {
+            display: flex;
+            list-style: none;
+            gap: 40px;
+        }
+
+        .nav__link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav__link:hover {
+            color: var(--electric-blue);
+            text-shadow: 0 0 10px currentColor;
+        }
+
+        .nav__link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--electric-blue), var(--neon-purple));
+            transition: width 0.3s ease;
+        }
+
+        .nav__link:hover::after {
+            width: 100%;
+        }
+
+        .nav__actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nav__toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .lang-select {
+            background: var(--bg-secondary);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            color: var(--text-primary);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            border: none;
+        }
+
+        .btn--primary {
+            background: linear-gradient(135deg, var(--neon-purple), var(--electric-blue));
+            color: white;
+            box-shadow: 0 4px 20px rgba(181, 55, 255, 0.4);
+            animation: pulse-glow 3s infinite;
+        }
+
+        .btn--primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 217, 255, 0.6);
+        }
+
+        .btn--outline {
+            background: transparent;
+            border: 2px solid var(--electric-blue);
+            color: var(--electric-blue);
+        }
+
+        .btn--outline:hover {
+            background: var(--electric-blue);
+            color: var(--bg-primary);
+            box-shadow: 0 0 20px var(--electric-blue);
+        }
+
+        .btn--sm {
+            padding: 10px 20px;
+            font-size: 14px;
+        }
+
+        .btn--lg {
+            padding: 18px 36px;
+            font-size: 18px;
+            width: 220px;
+        }
+
+        .btn--telegram {
+            background: transparent;
+            border: 2px solid #0088cc;
+            color: #0088cc;
+        }
+
+        .btn--telegram:hover {
+            background: #0088cc;
+            color: white;
+            box-shadow: 0 0 20px #0088cc;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 4px 20px rgba(181, 55, 255, 0.4); }
+            50% { box-shadow: 0 4px 30px rgba(181, 55, 255, 0.8); }
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            background: radial-gradient(ellipse at center, rgba(26, 10, 48, 0.8) 0%, transparent 70%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%2300d9ff" stroke-width="0.1" opacity="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            transform: perspective(1000px) rotateX(20deg);
+            opacity: 0.3;
+        }
+
+        .hero__content {
+            z-index: 10;
+            position: relative;
+            max-width: 800px;
+        }
+
+        .hero__title {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(48px, 8vw, 72px);
+            font-weight: 900;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--text-primary), var(--electric-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 40px rgba(0, 217, 255, 0.6);
+            line-height: 1.1;
+            animation: title-glow 2s ease-in-out;
+        }
+
+        .hero__subtitle {
+            font-size: clamp(18px, 3vw, 24px);
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fade-in-up 1s ease-out 0.3s both;
+        }
+
+        .hero__buttons {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+            animation: fade-in-up 1s ease-out 0.6s both;
+        }
+
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+            animation: fade-in-up 1s ease-out 0.9s both;
+        }
+
+        .trust-badge {
+            background: rgba(26, 26, 40, 0.5);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            backdrop-filter: blur(10px);
+        }
+
+        @keyframes title-glow {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fade-in-up {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Features Section */
+        .features {
+            padding: 120px 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(36px, 6vw, 48px);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 60px;
+            color: var(--text-primary);
+            text-shadow: 0 0 15px rgba(0, 217, 255, 0.5);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--electric-blue), var(--neon-purple));
+            margin: 20px auto;
+            border-radius: 2px;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 32px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: rgba(26, 26, 40, 0.5);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(0, 217, 255, 0.5);
+            background: rgba(26, 26, 40, 0.7);
+            box-shadow: 0 20px 40px rgba(0, 217, 255, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            display: block;
+            filter: drop-shadow(0 0 10px currentColor);
+            animation: float-icon 3s ease-in-out infinite;
+        }
+
+        .feature-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        @keyframes float-icon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Games Section */
+        .games {
+            padding: 120px 0;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .game-card {
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, rgba(181, 55, 255, 0.1), rgba(0, 217, 255, 0.1));
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 16px;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .game-card:hover::before {
+            left: 100%;
+        }
+
+        .game-card:hover {
+            transform: scale(1.05);
+            border-color: rgba(0, 217, 255, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.2);
+        }
+
+        .game-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .game-description {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .game-play-btn {
+            background: linear-gradient(135deg, var(--hot-pink), var(--neon-purple));
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .game-card:hover .game-play-btn {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Promotions Section */
+        .promotions {
+            padding: 120px 0;
+        }
+
+        .promotions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 32px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .promo-card {
+            background: linear-gradient(135deg, rgba(255, 0, 128, 0.1), rgba(181, 55, 255, 0.1));
+            border: 1px solid rgba(255, 0, 128, 0.3);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .promo-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        .promo-badge {
+            background: linear-gradient(135deg, var(--hot-pink), var(--neon-purple));
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            text-transform: uppercase;
+        }
+
+        .promo-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .promo-description {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        /* Steps Section */
+        .steps {
+            padding: 120px 0;
+            background: var(--bg-secondary);
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .step-card {
+            text-align: center;
+            padding: 32px;
+            position: relative;
+        }
+
+        .step-number {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--electric-blue), var(--neon-purple));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 auto 20px;
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+        }
+
+        .step-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .step-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-primary);
+            padding: 80px 0 40px;
+            border-top: 1px solid rgba(0, 217, 255, 0.1);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            color: var(--text-primary);
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .footer-section p, .footer-section a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            line-height: 1.8;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--electric-blue);
+            text-shadow: 0 0 5px currentColor;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 8px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-secondary);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            border-color: var(--electric-blue);
+            color: var(--electric-blue);
+            box-shadow: 0 0 15px rgba(0, 217, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 40px;
+            border-top: 1px solid rgba(0, 217, 255, 0.1);
+            color: var(--text-tertiary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav__menu {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background: rgba(10, 10, 15, 0.95);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+                padding-top: 60px;
+                transition: left 0.3s ease;
+            }
+
+            .nav__menu.active {
+                left: 0;
+            }
+
+            .nav__toggle {
+                display: block;
+            }
+
+            .hero__buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn--lg {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .trust-badges {
+                gap: 16px;
+            }
+
+            .trust-badge {
+                font-size: 12px;
+                padding: 8px 12px;
+            }
+
+            .features-grid,
+            .games-grid,
+            .promotions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 16px;
+            }
+
+            .hero__title {
+                font-size: 36px;
+            }
+
+            .section-title {
+                font-size: 28px;
+            }
+
+            .feature-card,
+            .promo-card {
+                padding: 24px;
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus styles for accessibility */
+        .btn:focus,
+        .nav__link:focus,
+        .social-link:focus {
+            outline: 2px solid var(--electric-blue);
+            outline-offset: 2px;
+        }
+    </style>
 </head>
 <body>
     <!-- Particle Background -->
@@ -17,9 +778,7 @@
     <!-- Header/Navigation -->
     <header class="header">
         <nav class="nav container">
-            <div class="nav__logo">
-                <span class="logo-text">BG678</span>
-            </div>
+            <div class="nav__logo">BG678</div>
             <ul class="nav__menu" id="nav-menu">
                 <li class="nav__item"><a href="#home" class="nav__link">Home</a></li>
                 <li class="nav__item"><a href="#games" class="nav__link">Games</a></li>
@@ -28,300 +787,182 @@
                 <li class="nav__item"><a href="#support" class="nav__link">Support</a></li>
             </ul>
             <div class="nav__actions">
-                <a href="https://www.bbgg6688.com/#/pages/login/register?invitationCode=7162104852" target="_blank" class="btn btn--outline btn--sm">Login</a>
-<a href="https://www.bbgg6688.com/#/pages/login/register?invitationCode=7162104852" target="_blank" class="btn btn--primary btn--sm">Register</a>
-
+                <a href="https://www.bbgg6688.com/#/pages/login/register?invitationCode=7162104852" class="btn btn--outline btn--sm" target="_blank" rel="noopener">Login</a>
+                <a href="https://www.bbgg6688.com/#/pages/login/register?invitationCode=7162104852" class="btn btn--primary btn--sm" target="_blank" rel="noopener">Register</a>
                 <select class="lang-select">
                     <option value="en">🇺🇸 EN</option>
                     <option value="zh">🇨🇳 中文</option>
                     <option value="th">🇹🇭 ไทย</option>
                 </select>
             </div>
-            <button class="nav__toggle" id="nav-toggle">
-                <span class="hamburger-line"></span>
-                <span class="hamburger-line"></span>
-                <span class="hamburger-line"></span>
-            </button>
+            <button class="nav__toggle" id="nav-toggle">☰</button>
         </nav>
     </header>
 
-    <main>
-        <!-- Hero Section -->
-        <section class="hero" id="home">
-            <div class="hero__background">
-                <div class="gradient-mesh"></div>
-                <div class="grid-overlay"></div>
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero__content">
+            <h1 class="hero__title">Play Big. Win Bigger with BG678</h1>
+            <p class="hero__subtitle">Experience premium online gaming with instant withdrawals, world-class security, and 10,000+ games</p>
+            <div class="hero__buttons">
+                <a href="https://www.bbgg6688.com/#/pages/login/register?invitationCode=7162104852" class="btn btn--outline btn--lg" target="_blank" rel="noopener">🔑 Login</a>
+                <a href="https://www.bbgg6688.com/#/pages/login/register?invitationCode=7162104852" class="btn btn--primary btn--lg" target="_blank" rel="noopener">⭐ Register Now</a>
+                <a href="https://t.me/BG678GODDD" class="btn btn--telegram btn--lg" target="_blank" rel="noopener">📢 Join Telegram</a>
             </div>
-            <div class="hero__content container">
-                <h1 class="hero__title">
-                    <span class="glow-text">Play Big.</span>
-                    <span class="glow-text gradient-text">Win Bigger</span>
-                    <span class="glow-text">with BG678</span>
-                </h1>
-                <p class="hero__subtitle">
-                    Experience premium online gaming with instant withdrawals, world-class security, and 10,000+ games
-                </p>
-                <div class="hero__buttons">
-                    <button class="btn btn--outline btn--lg">
-                        <span class="btn__icon">👤</span>
-                        Login
-                    </button>
-                    <button class="btn btn--primary btn--lg btn--pulse">
-                        <span class="btn__icon">✨</span>
-                        Register Now
-                    </button>
-                    <a href="https://t.me/BG678GODDD" target="_blank" class="btn btn--telegram btn--lg">
-    <span class="btn__icon">📱</span>
-    Join Telegram
-</a>
+            <div class="trust-badges">
+                <div class="trust-badge">🛡️ Licensed & Regulated</div>
+                <div class="trust-badge">🔒 SSL Encrypted</div>
+                <div class="trust-badge">🎧 24/7 Support</div>
+            </div>
+        </div>
+    </section>
 
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Why BG678 is Your Best Choice</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">⚡</span>
+                    <h3 class="feature-title">Lightning Fast Withdrawals</h3>
+                    <p class="feature-description">Get your winnings in under 5 minutes with our instant withdrawal system</p>
                 </div>
-                <div class="trust-badges">
-                    <div class="badge">
-                        <span class="badge__icon">🛡️</span>
-                        Licensed & Regulated
-                    </div>
-                    <div class="badge">
-                        <span class="badge__icon">🔒</span>
-                        SSL Encrypted
-                    </div>
-                    <div class="badge">
-                        <span class="badge__icon">🎧</span>
-                        24/7 Support
-                    </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🛡️</span>
+                    <h3 class="feature-title">Bank-Grade Security</h3>
+                    <p class="feature-description">256-bit SSL encryption protects your data and transactions</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🎮</span>
+                    <h3 class="feature-title">10,000+ Premium Games</h3>
+                    <p class="feature-description">Slots, live casino, sports betting and much more</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🎧</span>
+                    <h3 class="feature-title">24/7 VIP Support</h3>
+                    <p class="feature-description">Multilingual support team always ready to help</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">📱</span>
+                    <h3 class="feature-title">Mobile Optimized</h3>
+                    <p class="feature-description">Seamless experience on any device, anywhere</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🏆</span>
+                    <h3 class="feature-title">Highest Payouts</h3>
+                    <p class="feature-description">Industry-leading 98.5% RTP across all games</p>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Features Section -->
-        <section class="features">
-            <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title">Why BG678 is Your Best Choice</h2>
-                    <div class="neon-line"></div>
+    <!-- Games Section -->
+    <section class="games" id="games">
+        <div class="container">
+            <h2 class="section-title">Explore Our Gaming Universe</h2>
+            <div class="games-grid">
+                <div class="game-card">
+                    <h3 class="game-title">🎰 Slot Machines</h3>
+                    <p class="game-description">Thousands of themed slots with mega jackpots</p>
+                    <button class="game-play-btn">Play Now</button>
                 </div>
-                <div class="features__grid">
-                    <div class="feature-card">
-                        <div class="feature-card__icon">⚡</div>
-                        <h3 class="feature-card__title">Lightning Fast Withdrawals</h3>
-                        <p class="feature-card__description">Get your winnings in under 5 minutes</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-card__icon">🛡️</div>
-                        <h3 class="feature-card__title">Bank-Grade Security</h3>
-                        <p class="feature-card__description">256-bit SSL encryption protects your data</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-card__icon">🎮</div>
-                        <h3 class="feature-card__title">10,000+ Premium Games</h3>
-                        <p class="feature-card__description">Slots, live casino, sports & more</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-card__icon">🎧</div>
-                        <h3 class="feature-card__title">24/7 VIP Support</h3>
-                        <p class="feature-card__description">Multilingual support team always ready</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-card__icon">📱</div>
-                        <h3 class="feature-card__title">Mobile Optimized</h3>
-                        <p class="feature-card__description">Seamless experience on any device</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-card__icon">🏆</div>
-                        <h3 class="feature-card__title">Highest Payouts</h3>
-                        <p class="feature-card__description">Industry-leading 98.5% RTP</p>
-                    </div>
+                <div class="game-card">
+                    <h3 class="game-title">🎲 Live Casino</h3>
+                    <p class="game-description">Baccarat, Roulette, Blackjack with live dealers</p>
+                    <button class="game-play-btn">Play Now</button>
+                </div>
+                <div class="game-card">
+                    <h3 class="game-title">⚽ Sports Betting</h3>
+                    <p class="game-description">Football, Basketball, eSports and more</p>
+                    <button class="game-play-btn">Play Now</button>
+                </div>
+                <div class="game-card">
+                    <h3 class="game-title">🎣 Fishing Games</h3>
+                    <p class="game-description">Interactive arcade fishing adventures</p>
+                    <button class="game-play-btn">Play Now</button>
+                </div>
+                <div class="game-card">
+                    <h3 class="game-title">🎟️ Lottery & Instant Win</h3>
+                    <p class="game-description">Quick win opportunities every minute</p>
+                    <button class="game-play-btn">Play Now</button>
+                </div>
+                <div class="game-card">
+                    <h3 class="game-title">🃏 Poker & Card Games</h3>
+                    <p class="game-description">Texas Hold'em, Omaha and more</p>
+                    <button class="game-play-btn">Play Now</button>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Games Showcase -->
-        <section class="games" id="games">
-            <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title">Explore Our Gaming Universe</h2>
-                    <p class="section-subtitle">Curated selection of premium entertainment</p>
+    <!-- Promotions Section -->
+    <section class="promotions" id="promotions">
+        <div class="container">
+            <h2 class="section-title">Massive Bonuses Await</h2>
+            <div class="promotions-grid">
+                <div class="promo-card">
+                    <div class="promo-badge">NEW</div>
+                    <h3 class="promo-title">Welcome Bonus</h3>
+                    <p class="promo-description">300% up to $5,000 + 50 Free Spins</p>
+                    <a href="https://www.bbgg6688.com/#/pages/login/register?invitationCode=7162104852" class="btn btn--primary" target="_blank" rel="noopener">Claim Now</a>
                 </div>
-                <div class="games__grid">
-                    <div class="game-card">
-                        <div class="game-card__content">
-                            <h3 class="game-card__title">Slot Machines</h3>
-                            <p class="game-card__description">Thousands of themed slots</p>
-                            <button class="game-card__btn">Play Now</button>
-                        </div>
-                    </div>
-                    <div class="game-card">
-                        <div class="game-card__content">
-                            <h3 class="game-card__title">Live Casino</h3>
-                            <p class="game-card__description">Baccarat, Roulette, Blackjack</p>
-                            <button class="game-card__btn">Play Now</button>
-                        </div>
-                    </div>
-                    <div class="game-card">
-                        <div class="game-card__content">
-                            <h3 class="game-card__title">Sports Betting</h3>
-                            <p class="game-card__description">Football, Basketball, eSports</p>
-                            <button class="game-card__btn">Play Now</button>
-                        </div>
-                    </div>
-                    <div class="game-card">
-                        <div class="game-card__content">
-                            <h3 class="game-card__title">Fishing Games</h3>
-                            <p class="game-card__description">Interactive arcade fishing</p>
-                            <button class="game-card__btn">Play Now</button>
-                        </div>
-                    </div>
-                    <div class="game-card">
-                        <div class="game-card__content">
-                            <h3 class="game-card__title">Lottery & Instant Win</h3>
-                            <p class="game-card__description">Quick win opportunities</p>
-                            <button class="game-card__btn">Play Now</button>
-                        </div>
-                    </div>
-                    <div class="game-card">
-                        <div class="game-card__content">
-                            <h3 class="game-card__title">Poker & Card Games</h3>
-                            <p class="game-card__description">Texas Hold'em and more</p>
-                            <button class="game-card__btn">Play Now</button>
-                        </div>
-                    </div>
+                <div class="promo-card">
+                    <div class="promo-badge">HOT</div>
+                    <h3 class="promo-title">Daily Cashback</h3>
+                    <p class="promo-description">10% Daily Cashback, No Limits</p>
+                    <a href="https://www.bbgg6688.com/#/pages/login/register?invitationCode=7162104852" class="btn btn--primary" target="_blank" rel="noopener">Claim Now</a>
+                </div>
+                <div class="promo-card">
+                    <div class="promo-badge">EXCLUSIVE</div>
+                    <h3 class="promo-title">Refer & Earn</h3>
+                    <p class="promo-description">Earn up to $1,000 per Referral</p>
+                    <a href="https://www.bbgg6688.com/#/pages/login/register?invitationCode=7162104852" class="btn btn--primary" target="_blank" rel="noopener">Claim Now</a>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Promotions Section -->
-        <section class="promotions" id="promotions">
-            <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title">Massive Bonuses Await</h2>
-                    <div class="floating-coins">💰</div>
+    <!-- Steps Section -->
+    <section class="steps" id="steps">
+        <div class="container">
+            <h2 class="section-title">Start Winning in 4 Simple Steps</h2>
+            <div class="steps-container">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Register 🎯</h3>
+                    <p class="step-description">Create your account in 30 seconds</p>
                 </div>
-                <div class="promotions__grid">
-                    <div class="promo-card">
-                        <div class="promo-card__badge">NEW</div>
-                        <h3 class="promo-card__title">Welcome Bonus</h3>
-                        <div class="promo-card__amount">300%</div>
-                        <p class="promo-card__description">up to $5,000 + 50 Free Spins</p>
-                        <button class="btn btn--primary btn--pulse">Claim Now</button>
-                    </div>
-                    <div class="promo-card">
-                        <div class="promo-card__badge promo-card__badge--hot">HOT</div>
-                        <h3 class="promo-card__title">Daily Cashback</h3>
-                        <div class="promo-card__amount">10%</div>
-                        <p class="promo-card__description">Daily Cashback, No Limits</p>
-                        <button class="btn btn--primary btn--pulse">Claim Now</button>
-                    </div>
-                    <div class="promo-card">
-                        <div class="promo-card__badge promo-card__badge--exclusive">EXCLUSIVE</div>
-                        <h3 class="promo-card__title">Refer & Earn</h3>
-                        <div class="promo-card__amount">$1,000</div>
-                        <p class="promo-card__description">Earn up to $1,000 per Referral</p>
-                        <button class="btn btn--primary btn--pulse">Claim Now</button>
-                    </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">Deposit 💳</h3>
+                    <p class="step-description">Add funds via 20+ payment methods</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Play 🎮</h3>
+                    <p class="step-description">Choose from 10,000+ premium games</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3 class="step-title">Withdraw 💰</h3>
+                    <p class="step-description">Cash out instantly, anytime</p>
                 </div>
             </div>
-        </section>
-
-        <!-- Trust & Security Section -->
-        <section class="security">
-            <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title">
-                        <span class="security-icon">🛡️</span>
-                        Your Safety is Our Priority
-                    </h2>
-                </div>
-                <div class="security__grid">
-                    <div class="security__section">
-                        <h3 class="security__title">Payment Methods</h3>
-                        <div class="payment-methods">
-                            <div class="payment-logo">💳 Visa</div>
-                            <div class="payment-logo">💳 Mastercard</div>
-                            <div class="payment-logo">₿ Crypto</div>
-                            <div class="payment-logo">💰 PayPal</div>
-                            <div class="payment-logo">💸 Skrill</div>
-                            <div class="payment-logo">🏦 Neteller</div>
-                        </div>
-                    </div>
-                    <div class="security__section">
-                        <h3 class="security__title">Security Certifications</h3>
-                        <div class="certifications">
-                            <div class="cert-badge">🔒 SSL Certificate</div>
-                            <div class="cert-badge">🎮 Gaming License</div>
-                            <div class="cert-badge">⚖️ Fair Play Certified</div>
-                        </div>
-                    </div>
-                    <div class="security__section">
-                        <h3 class="security__title">Responsible Gaming</h3>
-                        <div class="responsible-gaming">
-                            <div class="responsible-item">🔞 18+ Only</div>
-                            <div class="responsible-item">🚫 Self-Exclusion Tools</div>
-                            <div class="responsible-item">💡 Support Resources</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- How to Start Section -->
-        <section class="how-to-start">
-            <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title">Start Winning in 4 Simple Steps</h2>
-                </div>
-                <div class="steps">
-                    <div class="step">
-                        <div class="step__number">1</div>
-                        <div class="step__content">
-                            <div class="step__icon">🎯</div>
-                            <h3 class="step__title">Register</h3>
-                            <p class="step__description">Create your account in 30 seconds</p>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step__number">2</div>
-                        <div class="step__content">
-                            <div class="step__icon">💳</div>
-                            <h3 class="step__title">Deposit</h3>
-                            <p class="step__description">Add funds via 20+ payment methods</p>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step__number">3</div>
-                        <div class="step__content">
-                            <div class="step__icon">🎮</div>
-                            <h3 class="step__title">Play</h3>
-                            <p class="step__description">Choose from 10,000+ games</p>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step__number">4</div>
-                        <div class="step__content">
-                            <div class="step__icon">💰</div>
-                            <h3 class="step__title">Withdraw</h3>
-                            <p class="step__description">Cash out instantly, anytime</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="connecting-line"></div>
-            </div>
-        </section>
-    </main>
+        </div>
+    </section>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <div class="footer__content">
-                <div class="footer__column">
-                    <div class="footer__logo">BG678</div>
-                    <p class="footer__description">
-                        Premium online gaming platform with world-class security, instant withdrawals, and 10,000+ games.
-                    </p>
-                    <p class="footer__license">Licensed and regulated for your protection.</p>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About BG678</h3>
+                    <p>Premium online gaming platform offering world-class entertainment with the highest security standards and instant payouts.</p>
+                    <p style="margin-top: 16px; font-size: 14px; color: var(--text-tertiary);">Licensed & Regulated</p>
                 </div>
-                <div class="footer__column">
-                    <h4 class="footer__title">Quick Links</h4>
-                    <ul class="footer__links">
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
                         <li><a href="#about">About Us</a></li>
                         <li><a href="#terms">Terms & Conditions</a></li>
                         <li><a href="#privacy">Privacy Policy</a></li>
@@ -329,43 +970,136 @@
                         <li><a href="#faq">FAQ</a></li>
                     </ul>
                 </div>
-                <div class="footer__column">
-                    <h4 class="footer__title">Games</h4>
-                    <ul class="footer__links">
+                <div class="footer-section">
+                    <h3>Games</h3>
+                    <ul class="footer-links">
                         <li><a href="#slots">Slots</a></li>
                         <li><a href="#live-casino">Live Casino</a></li>
                         <li><a href="#sports">Sports Betting</a></li>
+                        <li><a href="#fishing">Fishing Games</a></li>
                         <li><a href="#all-games">All Games</a></li>
                     </ul>
                 </div>
-                <div class="footer__column">
-                    <h4 class="footer__title">Support</h4>
-                    <ul class="footer__links">
-                        <li><a href="#contact">Contact Us</a></li>
-                        <li><a href="#chat">Live Chat <span class="online-indicator">●</span></a></li>
-                        <li><a href="mailto:support@bg678.com">support@bg678.com</a></li>
-                        <li><a href="https://t.me/BG678GODDD">Telegram Community</a></li>
-                    </ul>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <p>📞 24/7 Live Chat</p>
+                    <p>📧 support@bg678.com</p>
+                    <p>📱 <a href="https://t.me/BG678GODDD" target="_blank" rel="noopener">Telegram Community</a></p>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Facebook">📘</a>
+                        <a href="#" class="social-link" aria-label="Twitter">🐦</a>
+                        <a href="#" class="social-link" aria-label="Instagram">📸</a>
+                        <a href="#" class="social-link" aria-label="YouTube">📺</a>
+                        <a href="https://t.me/BG678GODDD" class="social-link" aria-label="Telegram" target="_blank" rel="noopener">📢</a>
+                    </div>
                 </div>
             </div>
-            <div class="footer__bottom">
-                <div class="footer__copyright">
-                    © 2025 BG678. All Rights Reserved.
-                </div>
-                <div class="footer__payment-icons">
-                    <span>💳</span><span>₿</span><span>💰</span><span>🏦</span>
-                </div>
-                <div class="footer__social">
-                    <a href="#facebook" class="social-icon">📘</a>
-                    <a href="#twitter" class="social-icon">🐦</a>
-                    <a href="#instagram" class="social-icon">📷</a>
-                    <a href="#youtube" class="social-icon">📺</a>
-                    <a href="https://t.me/BG678GODDD" class="social-icon">📱</a>
-                </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 BG678. All Rights Reserved. | 🔒 Visa 🔒 Mastercard 🔒 Crypto 🔒 PayPal</p>
             </div>
         </div>
     </footer>
 
-    <script src="app.js"></script>
+    <script>
+        // BG678 Landing Page JavaScript
+        class BG678App {
+            constructor() {
+                this.particles = [];
+                this.init();
+            }
+
+            init() {
+                this.setupParticles();
+                this.setupMobileMenu();
+                this.setupSmoothScrolling();
+            }
+
+            // Particle System
+            setupParticles() {
+                const particleContainer = document.getElementById('particles');
+                if (!particleContainer) return;
+
+                this.createParticles(particleContainer);
+            }
+
+            createParticles(container) {
+                const particleCount = window.innerWidth > 768 ? 50 : 25;
+
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+
+                    // Random starting position
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.animationDelay = Math.random() * 20 + 's';
+                    particle.style.animationDuration = (15 + Math.random() * 25) + 's';
+
+                    // Random size
+                    const size = Math.random() * 4 + 2;
+                    particle.style.width = size + 'px';
+                    particle.style.height = size + 'px';
+
+                    // Random colors
+                    const colors = ['var(--electric-blue)', 'var(--neon-purple)', 'var(--cyber-cyan)'];
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    particle.style.background = `radial-gradient(circle, ${color} 0%, transparent 70%)`;
+
+                    container.appendChild(particle);
+                    this.particles.push(particle);
+                }
+            }
+
+            // Mobile Navigation
+            setupMobileMenu() {
+                const navToggle = document.getElementById('nav-toggle');
+                const navMenu = document.getElementById('nav-menu');
+
+                if (!navToggle || !navMenu) return;
+
+                navToggle.addEventListener('click', () => {
+                    navMenu.classList.toggle('active');
+                    navToggle.textContent = navMenu.classList.contains('active') ? '✕' : '☰';
+                });
+
+                // Close menu when clicking on links
+                navMenu.querySelectorAll('.nav__link').forEach(link => {
+                    link.addEventListener('click', () => {
+                        navMenu.classList.remove('active');
+                        navToggle.textContent = '☰';
+                    });
+                });
+            }
+
+            // Smooth Scrolling
+            setupSmoothScrolling() {
+                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                    anchor.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const target = document.querySelector(this.getAttribute('href'));
+                        if (target) {
+                            target.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
+                    });
+                });
+            }
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new BG678App();
+        });
+
+        // Handle window resize for particles
+        window.addEventListener('resize', () => {
+            const particleContainer = document.getElementById('particles');
+            if (particleContainer) {
+                particleContainer.innerHTML = '';
+                new BG678App().createParticles(particleContainer);
+            }
+        });
+    </script>
 </body>
 </html>
